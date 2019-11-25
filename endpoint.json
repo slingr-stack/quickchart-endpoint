@@ -18,15 +18,38 @@
     "icon48": "https://storage.googleapis.com/static.slingrs.io/platform/endpoints/quickchart.png",
     "status": "ACTIVE",
     "stores": [],
-    "events": [],
-    "functions": [
+    "events": [
         {
-            "label": "GET",
-            "name": "_get"
+            "label": "Chart Response",
+            "name": "chartResponse"
         },
         {
-            "label": "POST",
-            "name": "_post"
+            "label": "QR Response",
+            "name": "qrResponse"
+        }
+    ],
+    "functions": [
+        {
+            "label": "Chart by POST",
+            "name": "_chartByPost",
+            "callbacks": [
+                {
+                    "name": "chartResponse",
+                    "maxWaitingTime": 120000,
+                    "maxExpectedResponses": 1
+                }
+            ]
+        },
+        {
+            "label": "QR by GET",
+            "name": "_qrByGet",
+            "callbacks": [
+                {
+                    "name": "qrResponse",
+                    "maxWaitingTime": 120000,
+                    "maxExpectedResponses": 1
+                }
+            ]
         }
     ],
     "scripts":[

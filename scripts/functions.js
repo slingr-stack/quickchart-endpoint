@@ -1,15 +1,39 @@
-/////////////////////////////////////
-// Public API - Generic Functions
-/////////////////////////////////////
+endpoint.chart = function(chartOptions, callbackData, callbacks) {
 
-endpoint.get = function (url) {
-    var options = checkHttpOptions(url, {});
-    return endpoint._get(options);
+    var url = "/chart";
+    chartOptions = chartOptions || {};
+
+    var options = checkHttpOptions(url, chartOptions);
+    return endpoint._chartByPost(options, callbackData, callbacks);
+
 };
 
-endpoint.post = function (url, options) {
-    options = checkHttpOptions(url, options);
-    return endpoint._post(options);
+var getUrl = function (url, args) {
+
+    if (!url) {
+        return null;
+    }
+
+    if (args) {
+        var tmp = Object.keys(args).map(function (k) {
+            return encodeURIComponent(k) + '=' + encodeURIComponent(args[k]);
+        }).join('&');
+
+        url += '?' + tmp;
+    }
+
+    return url;
+};
+
+endpoint.qr = function(qrOptions, callbackData, callbacks) {
+
+    var url = getUrl("/qr", qrOptions);
+
+    sys.logs.info("---------- " + url);
+    var options = checkHttpOptions(url, null);
+
+    return endpoint._qrByGet(options, callbackData, callbacks);
+
 };
 
 /////////////////////////////
