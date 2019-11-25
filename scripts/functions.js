@@ -8,6 +8,18 @@ endpoint.chart = function(chartOptions, callbackData, callbacks) {
 
 };
 
+endpoint.qr = function(qrOptions, callbackData, callbacks) {
+
+    var url = getUrl("/qr", qrOptions);
+    var options = checkHttpOptions(url, null);
+
+    return endpoint._qrByGet(options, callbackData, callbacks);
+};
+
+/////////////////////////////
+//  Private helpers
+/////////////////////////////
+
 var getUrl = function (url, args) {
 
     if (!url) {
@@ -24,18 +36,6 @@ var getUrl = function (url, args) {
 
     return url;
 };
-
-endpoint.qr = function(qrOptions, callbackData, callbacks) {
-
-    var url = getUrl("/qr", qrOptions);
-    var options = checkHttpOptions(url, null);
-
-    return endpoint._qrByGet(options, callbackData, callbacks);
-};
-
-/////////////////////////////
-//  Private helpers
-/////////////////////////////
 
 var checkHttpOptions = function (url, options) {
     options = options || {};
