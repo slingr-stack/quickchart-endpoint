@@ -28,12 +28,9 @@ var getUrl = function (url, args) {
 endpoint.qr = function(qrOptions, callbackData, callbacks) {
 
     var url = getUrl("/qr", qrOptions);
-
-    sys.logs.info("---------- " + url);
     var options = checkHttpOptions(url, null);
 
     return endpoint._qrByGet(options, callbackData, callbacks);
-
 };
 
 /////////////////////////////
