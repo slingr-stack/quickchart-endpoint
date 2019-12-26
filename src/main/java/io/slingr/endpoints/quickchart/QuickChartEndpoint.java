@@ -127,10 +127,16 @@ public class QuickChartEndpoint extends Endpoint {
         Json params = request.getJsonParams();
         String path = params.string("path");
 
+        if (StringUtils.isNotBlank(token)) {
+            path += "&token=" + token;
+        }
+
+        final String apiPath = path;
+
         Executors.newSingleThreadScheduledExecutor().execute(() -> {
 
             HttpClient httpClient = HttpClientBuilder.create().build();
-            HttpGet req = new HttpGet(API_URL + path);
+            HttpGet req = new HttpGet(API_URL + apiPath);
             req.setHeader("Content-Type", "application/json");
 
             HttpResponse response = null;
@@ -152,7 +158,7 @@ public class QuickChartEndpoint extends Endpoint {
                 String mimeType = contentType.getMimeType();
 
                 String extension = "." + FORMAT_PNG;
-                if (StringUtils.contains(path, "format=" + FORMAT_SVG)) {
+                if (StringUtils.contains(apiPath, "format=" + FORMAT_SVG)) {
                     extension = "." + FORMAT_SVG;
                 }
 
