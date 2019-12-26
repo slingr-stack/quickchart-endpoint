@@ -55,5 +55,13 @@
     "scripts":[
         "functions.js"
     ],
-    "configuration":[]
+    "configuration":[
+        {
+            "name": "token",
+            "label": "Token",
+            "type": "text",
+            "description": "Required for QuickChart Pro.",
+            "required": false
+        }
+    ]
 }

@@ -42,6 +42,9 @@ public class QuickChartEndpoint extends Endpoint {
     @ApplicationLogger
     protected AppLogs appLogger;
 
+    @EndpointProperty
+    private String token;
+
     @Override
     public void endpointStarted() {
     }
@@ -55,7 +58,18 @@ public class QuickChartEndpoint extends Endpoint {
         String path = params.string("path");
         Json body = params.json("body");
 
+        if (StringUtils.isNotBlank(token)) {
+            body.set("token", token);
+        }
+
         Executors.newSingleThreadScheduledExecutor().execute(() -> {
+
+            String fileName = "chart-" + UUID.randomUUID();
+            if (body.contains("name")) {
+                fileName = body.string("name");
+                body.remove("name");
+            }
+
             StringEntity entity = new StringEntity(body.toString(), ContentType.APPLICATION_FORM_URLENCODED);
 
             HttpClient httpClient = HttpClientBuilder.create().build();
@@ -87,7 +101,7 @@ public class QuickChartEndpoint extends Endpoint {
                     extension = "." + FORMAT_PDF;
                 }
 
-                Json fileJson = files().upload("chart-" + UUID.randomUUID() + extension, is, mimeType);
+                Json fileJson = files().upload(fileName + extension, is, mimeType);
 
                 resp.set("status", "ok");
                 resp.set("file", fileJson);
