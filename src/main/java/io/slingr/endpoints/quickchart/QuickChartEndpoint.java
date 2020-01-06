@@ -42,9 +42,6 @@ public class QuickChartEndpoint extends Endpoint {
     @ApplicationLogger
     protected AppLogs appLogger;
 
-    @EndpointProperty
-    private String token;
-
     @Override
     public void endpointStarted() {
     }
@@ -58,10 +55,6 @@ public class QuickChartEndpoint extends Endpoint {
         String path = params.string("path");
         Json body = params.json("body");
 
-        if (StringUtils.isNotBlank(token)) {
-            body.set("token", token);
-        }
-
         Executors.newSingleThreadScheduledExecutor().execute(() -> {
 
             String fileName = "chart-" + UUID.randomUUID();
@@ -70,12 +63,9 @@ public class QuickChartEndpoint extends Endpoint {
                 body.remove("name");
             }
 
-            StringEntity entity = new StringEntity(body.toString(), ContentType.APPLICATION_FORM_URLENCODED);
-
             HttpClient httpClient = HttpClientBuilder.create().build();
-            HttpPost req = new HttpPost(API_URL + path);
+            HttpGet req = new HttpGet(API_URL + path);
             req.setHeader("Content-Type", "application/json");
-            req.setEntity(entity);
 
             HttpResponse response = null;
             try {
@@ -126,10 +116,6 @@ public class QuickChartEndpoint extends Endpoint {
 
         Json params = request.getJsonParams();
         String path = params.string("path");
-
-        if (StringUtils.isNotBlank(token)) {
-            path += "&token=" + token;
-        }
 
         final String apiPath = path;
 

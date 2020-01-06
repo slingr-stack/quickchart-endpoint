@@ -1,16 +1,47 @@
-endpoint.chart = function(chartOptions, callbackData, callbacks) {
+endpoint.chart = function (chartOptions, callbackData, callbacks) {
+
+    if (!chartOptions) {
+        throw 'Invalid chart options';
+    }
+
+    var fileName = chartOptions.name;
+    if (fileName) {
+        delete chartOptions.name;
+    }
+
+    var chartOpt = chartOptions.chart;
+    if (chartOpt) {
+        delete chartOptions.chart;
+    } else {
+        throw 'Chart or c can not be empty';
+    }
 
     var url = "/chart";
-    chartOptions = chartOptions || {};
 
-    var options = checkHttpOptions(url, chartOptions);
+    if (endpoint._configuration && endpoint._configuration.key) {
+        url = concatUrl(url, 'key=' + endpoint._configuration.key);
+    }
+
+    url = getUrl(url, chartOptions);
+
+    url = concatUrl(url, 'c=' + encodeURI(JSON.stringify(chartOpt)));
+
+    var options = checkHttpOptions(url, {
+        name: fileName
+    });
     return endpoint._chartByPost(options, callbackData, callbacks);
 
 };
 
-endpoint.qr = function(qrOptions, callbackData, callbacks) {
+endpoint.qr = function (qrOptions, callbackData, callbacks) {
 
-    var url = getUrl("/qr", qrOptions);
+    var url = "/qr";
+    if (endpoint._configuration && endpoint._configuration.key) {
+        url = concatUrl(url, 'key=' + endpoint._configuration.key);
+    }
+
+    url = getUrl(url, qrOptions);
+
     var options = checkHttpOptions(url, null);
 
     return endpoint._qrByGet(options, callbackData, callbacks);
@@ -31,10 +62,15 @@ var getUrl = function (url, args) {
             return encodeURIComponent(k) + '=' + encodeURIComponent(args[k]);
         }).join('&');
 
-        url += '?' + tmp;
+        url = concatUrl(url, tmp);
+
     }
 
     return url;
+};
+
+var concatUrl = function (url, str) {
+    return url + ((!url || url.indexOf('?') < 0) ? '?' : '&') + str;
 };
 
 var checkHttpOptions = function (url, options) {
