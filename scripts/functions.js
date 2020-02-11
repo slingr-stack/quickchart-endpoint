@@ -4,31 +4,16 @@ endpoint.chart = function (chartOptions, callbackData, callbacks) {
         throw 'Invalid chart options';
     }
 
-    var fileName = chartOptions.name;
-    if (fileName) {
-        delete chartOptions.name;
-    }
-
-    var chartOpt = chartOptions.chart;
-    if (chartOpt) {
-        delete chartOptions.chart;
-    } else {
+    if (!chartOptions.chart) {
         throw 'Chart or c can not be empty';
     }
 
-    var url = "/chart";
-
+    var URI = "/chart"
     if (endpoint._configuration && endpoint._configuration.key) {
-        url = concatUrl(url, 'key=' + endpoint._configuration.key);
+        URI = concatUrl(URI, 'key=' + endpoint._configuration.key);
     }
 
-    url = getUrl(url, chartOptions);
-
-    url = concatUrl(url, 'c=' + encodeURI(JSON.stringify(chartOpt)));
-
-    var options = checkHttpOptions(url, {
-        name: fileName
-    });
+    var options = checkHttpOptions(URI, chartOptions);
     return endpoint._chartByPost(options, callbackData, callbacks);
 
 };

@@ -64,44 +64,64 @@ public class QuickChartEndpoint extends Endpoint {
             }
 
             HttpClient httpClient = HttpClientBuilder.create().build();
-            HttpGet req = new HttpGet(API_URL + path);
-            req.setHeader("Content-Type", "application/json");
 
-            HttpResponse response = null;
+            String URI = API_URL + path;
+            HttpPost post = new HttpPost(URI);
+            post.setHeader("Content-Type", "application/json");
+
+            InputStream is = null;
+            String status = "ok";
+            int statusCode = 200;
+            boolean hasFile = true;
+
             try {
 
-                response = httpClient.execute(req);
+                post.setEntity(new StringEntity(body.toString()));
+                HttpResponse response = httpClient.execute(post);
 
-                if(response.getStatusLine().getStatusCode() != 200) {
-                    resp.set("status", "fail");
-                    resp.set("statusCode", response.getStatusLine().getStatusCode());
+                if (response.getStatusLine().getStatusCode() != 200) {
+                    status = "fail";
+                    statusCode = response.getStatusLine().getStatusCode();
 
-                    events().send("chartResponse", resp, request.getFunctionId());
-                    return;
+                    if (response.getEntity() == null || response.getEntity().getContentType() == null ||
+                            !StringUtils.equals(response.getEntity().getContentType().getValue(), "image/png")) {
+                        hasFile = false;
+                    }
                 }
 
-                InputStream is = response.getEntity().getContent();
+                if (hasFile) {
+                    is = response.getEntity().getContent();
 
-                ContentType contentType = ContentType.getOrDefault(response.getEntity());
-                String mimeType = contentType.getMimeType();
+                    ContentType contentType = ContentType.getOrDefault(response.getEntity());
+                    String mimeType = contentType.getMimeType();
 
-                String extension = "." + FORMAT_PNG;
-                if (body.contains("format") && body.string("format").equals(FORMAT_PDF) ||
-                        body.contains("f") && body.string("f").equals(FORMAT_PDF)) {
-                    extension = "." + FORMAT_PDF;
+                    if (body.contains("format") && body.string("format").equals(FORMAT_PDF) ||
+                            body.contains("f") && body.string("f").equals(FORMAT_PDF)) {
+                        fileName += "." + FORMAT_PDF;
+                    } else {
+                        fileName += "." + FORMAT_PNG;
+                    }
+
+                    appLogger.info(String.format("Start to upload chart [%s]", fileName));
+                    Json fileJson = files().upload(fileName, is, mimeType);
+                    appLogger.info(String.format("Chart was upload successfully as [%s]", fileName));
+
+                    resp.set("file", fileJson);
+                } else {
+                    appLogger.warn("Image was not ");
                 }
-
-                Json fileJson = files().upload(fileName + extension, is, mimeType);
-
-                resp.set("status", "ok");
-                resp.set("file", fileJson);
-
-                events().send("chartResponse", resp, request.getFunctionId());
-
-                IOUtils.closeQuietly(is);
 
             } catch (IOException e) {
-                e.printStackTrace();
+                String ERROR_MESSAGE = "Error to generate chart file";
+                logger.error(ERROR_MESSAGE, e);
+                appLogger.error(ERROR_MESSAGE, e);
+                status = "error";
+                statusCode = 500;
+            } finally {
+                resp.set("status", status);
+                resp.set("statusCode", statusCode);
+                events().send("chartResponse", resp, request.getFunctionId());
+                IOUtils.closeQuietly(is);
             }
 
         });
@@ -130,7 +150,7 @@ public class QuickChartEndpoint extends Endpoint {
 
                 response = httpClient.execute(req);
 
-                if(response.getStatusLine().getStatusCode() != 200) {
+                if (response.getStatusLine().getStatusCode() != 200) {
                     resp.set("status", "fail");
                     resp.set("statusCode", response.getStatusLine().getStatusCode());
 
