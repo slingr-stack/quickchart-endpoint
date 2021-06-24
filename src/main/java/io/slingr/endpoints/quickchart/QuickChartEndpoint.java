@@ -39,6 +39,9 @@ public class QuickChartEndpoint extends Endpoint {
     private final static String FORMAT_PDF = "pdf";
     private final static String FORMAT_SVG = "svg";
 
+    @EndpointProperty
+    private String key;
+
     @ApplicationLogger
     protected AppLogs appLogger;
 
@@ -48,69 +51,62 @@ public class QuickChartEndpoint extends Endpoint {
 
     @EndpointFunction(name = "_chartByPost")
     public Json chartByPost(FunctionRequest request) {
-
         Json resp = Json.map();
-
         Json params = request.getJsonParams();
         String path = params.string("path");
         Json body = params.json("body");
 
-        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+        appLogger.info("Performing request of generation of chart");
 
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            appLogger.info("Waiting for the generation of the chart");
             String fileName = "chart-" + UUID.randomUUID();
             if (body.contains("name")) {
                 fileName = body.string("name");
                 body.remove("name");
             }
+            if (StringUtils.isNotBlank(key)) {
+                body.set("key", key);
+            }
 
             HttpClient httpClient = HttpClientBuilder.create().build();
-
             String URI = API_URL + path;
             HttpPost post = new HttpPost(URI);
             post.setHeader("Content-Type", "application/json");
-
             InputStream is = null;
             String status = "ok";
             int statusCode = 200;
             boolean hasFile = true;
-
             try {
-
                 post.setEntity(new StringEntity(body.toString()));
                 HttpResponse response = httpClient.execute(post);
-
                 if (response.getStatusLine().getStatusCode() != 200) {
                     status = "fail";
                     statusCode = response.getStatusLine().getStatusCode();
-
                     if (response.getEntity() == null || response.getEntity().getContentType() == null ||
                             !StringUtils.equals(response.getEntity().getContentType().getValue(), "image/png")) {
                         hasFile = false;
                     }
                 }
-
                 if (hasFile) {
                     is = response.getEntity().getContent();
-
                     ContentType contentType = ContentType.getOrDefault(response.getEntity());
                     String mimeType = contentType.getMimeType();
-
                     if (body.contains("format") && body.string("format").equals(FORMAT_PDF) ||
                             body.contains("f") && body.string("f").equals(FORMAT_PDF)) {
                         fileName += "." + FORMAT_PDF;
                     } else {
                         fileName += "." + FORMAT_PNG;
                     }
-
                     appLogger.info(String.format("Start to upload chart [%s]", fileName));
                     Json fileJson = files().upload(fileName, is, mimeType);
                     appLogger.info(String.format("Chart was upload successfully as [%s]", fileName));
-
                     resp.set("file", fileJson);
-                } else {
-                    appLogger.warn("Image was not ");
-                }
 
+                    appLogger.info("Chart created successfully");
+                } else {
+                    appLogger.warn(String.format("Image was not received. Status code [%s]", response.getStatusLine().getStatusCode()));
+                }
             } catch (IOException e) {
                 String ERROR_MESSAGE = "Error to generate chart file";
                 logger.error(ERROR_MESSAGE, e);
@@ -123,51 +119,36 @@ public class QuickChartEndpoint extends Endpoint {
                 events().send("chartResponse", resp, request.getFunctionId());
                 IOUtils.closeQuietly(is);
             }
-
         });
-
         return Json.map().set("status", "ok");
     }
 
     @EndpointFunction(name = "_qrByGet")
     public Json qrByGET(FunctionRequest request) {
-
         Json resp = Json.map();
-
         Json params = request.getJsonParams();
         String path = params.string("path");
-
         final String apiPath = path;
-
         Executors.newSingleThreadScheduledExecutor().execute(() -> {
-
             HttpClient httpClient = HttpClientBuilder.create().build();
             HttpGet req = new HttpGet(API_URL + apiPath);
             req.setHeader("Content-Type", "application/json");
-
             HttpResponse response = null;
             try {
-
                 response = httpClient.execute(req);
-
                 if (response.getStatusLine().getStatusCode() != 200) {
                     resp.set("status", "fail");
                     resp.set("statusCode", response.getStatusLine().getStatusCode());
-
                     events().send("qrResponse", resp, request.getFunctionId());
                     return;
                 }
-
                 InputStream is = response.getEntity().getContent();
-
                 ContentType contentType = ContentType.getOrDefault(response.getEntity());
                 String mimeType = contentType.getMimeType();
-
                 String extension = "." + FORMAT_PNG;
                 if (StringUtils.contains(apiPath, "format=" + FORMAT_SVG)) {
                     extension = "." + FORMAT_SVG;
                 }
-
                 Json fileJson = files().upload("qr-" + UUID.randomUUID() + extension, is, mimeType);
 
                 resp.set("status", "ok");
@@ -176,7 +157,6 @@ public class QuickChartEndpoint extends Endpoint {
                 events().send("qrResponse", resp, request.getFunctionId());
 
                 IOUtils.closeQuietly(is);
-
             } catch (IOException e) {
                 e.printStackTrace();
             }

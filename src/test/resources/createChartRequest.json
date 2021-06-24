@@ -1,0 +1,66 @@
+{
+    "path": "/chart",
+    "body": {
+      "backgroundColor": "rgba(255, 255, 255, 0)",
+      "width": "1920",
+      "height": "1480",
+      "format": "png",
+      "chart": {
+        "type": "bar",
+        "data": {
+          "labels": [
+            "Your Company",
+            "Boardology Clients"
+          ],
+          "datasets": [
+            {
+              "type": "bar",
+              "barPercentage": 0.99,
+              "backgroundColor": [
+                "#f1bc38",
+                "#518D3D"
+              ],
+              "borderColor": "white",
+              "data": [
+                1,
+                4
+              ]
+            }
+          ]
+        },
+        "options": {
+          "legend": {
+            "display": false,
+            "labels": {
+              "fontColor": "white",
+              "fontSize": 60
+            }
+          },
+          "scales": {
+            "yAxes": [
+              {
+                "gridLines": {
+                  "color": "white",
+                  "lineWidth": 0.2
+                },
+                "ticks": {
+                  "min": 0,
+                  "max": 5
+                }
+              }
+            ],
+            "xAxes": [
+              {
+                "ticks": {
+                  "fontColor": "white",
+                  "fontSize": 60
+                }
+              }
+            ]
+          }
+        }
+      }
+  },
+  "userId": "5f6c8b86e192914b3ac70c7a",
+  "userEmail": "jespeche@slingr.io"
+}
