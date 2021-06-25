@@ -3,6 +3,7 @@ package io.slingr.endpoints.sample;
 import io.slingr.endpoints.utils.Json;
 import io.slingr.endpoints.utils.tests.EndpointTests;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,10 +22,11 @@ public class QuickChartEndpointTest {
     }
 
     @Test
+    @Ignore
     public void testCreateChart() throws IOException, InterruptedException {
         final Json request = Json.fromInternalFile("createChartRequest.json");
         test.executeFunction("_chartByPost", request);
-        // wait due async events
+        // force waiting to simulate async events
         while (true) {
             Thread.sleep(3000);
         }

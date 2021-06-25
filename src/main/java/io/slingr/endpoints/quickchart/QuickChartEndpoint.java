@@ -68,6 +68,8 @@ public class QuickChartEndpoint extends Endpoint {
             if (StringUtils.isNotBlank(key)) {
                 body.set("key", key);
             }
+            // to avoid 408 responses from the API
+            body.set("devicePixelRatio", 1.0);
 
             HttpClient httpClient = HttpClientBuilder.create().build();
             String URI = API_URL + path;
