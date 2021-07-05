@@ -80,7 +80,7 @@ public class QuickChartEndpoint extends Endpoint {
             int statusCode = 200;
             boolean hasFile = true;
             try {
-                post.setEntity(new StringEntity(body.toString()));
+                post.setEntity(new StringEntity(body.toString(),"UTF-8"));
                 HttpResponse response = httpClient.execute(post);
                 if (response.getStatusLine().getStatusCode() != 200) {
                     status = "fail";
