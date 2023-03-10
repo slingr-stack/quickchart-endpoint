@@ -41,8 +41,8 @@
             ]
         },
         {
-            "label": "QR by GET",
-            "name": "_qrByGet",
+            "label": "GET",
+            "name": "_get",
             "callbacks": [
                 {
                     "name": "qrResponse",

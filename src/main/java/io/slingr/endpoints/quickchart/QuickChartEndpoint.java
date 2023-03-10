@@ -1,6 +1,9 @@
 package io.slingr.endpoints.quickchart;
 
 import io.slingr.endpoints.Endpoint;
+import io.slingr.endpoints.HttpEndpoint;
+import io.slingr.endpoints.HttpPerUserEndpoint;
+import io.slingr.endpoints.exceptions.EndpointException;
 import io.slingr.endpoints.framework.annotations.*;
 import io.slingr.endpoints.services.AppLogs;
 import io.slingr.endpoints.utils.Json;
@@ -30,7 +33,7 @@ import java.util.concurrent.Executors;
  * <p>Created by hpacini on 11/22/19.
  */
 @SlingrEndpoint(name = "quickchart", functionPrefix = "_")
-public class QuickChartEndpoint extends Endpoint {
+public class QuickChartEndpoint extends HttpEndpoint {
 
     private static final Logger logger = LoggerFactory.getLogger(QuickChartEndpoint.class);
 
@@ -46,8 +49,10 @@ public class QuickChartEndpoint extends Endpoint {
     protected AppLogs appLogger;
 
     @Override
-    public void endpointStarted() {
-    }
+    public void endpointStarted() { }
+
+    @Override
+    public String getApiUri() { return API_URL; }
 
     @EndpointFunction(name = "_chartByPost")
     public Json chartByPost(FunctionRequest request) {
@@ -125,47 +130,39 @@ public class QuickChartEndpoint extends Endpoint {
         return Json.map().set("status", "ok");
     }
 
-    @EndpointFunction(name = "_qrByGet")
-    public Json qrByGET(FunctionRequest request) {
-        Json resp = Json.map();
-        Json params = request.getJsonParams();
-        String path = params.string("path");
-        final String apiPath = path;
-        Executors.newSingleThreadScheduledExecutor().execute(() -> {
-            HttpClient httpClient = HttpClientBuilder.create().build();
-            HttpGet req = new HttpGet(API_URL + apiPath);
-            req.setHeader("Content-Type", "application/json");
-            HttpResponse response = null;
-            try {
-                response = httpClient.execute(req);
-                if (response.getStatusLine().getStatusCode() != 200) {
-                    resp.set("status", "fail");
-                    resp.set("statusCode", response.getStatusLine().getStatusCode());
-                    events().send("qrResponse", resp, request.getFunctionId());
-                    return;
-                }
-                InputStream is = response.getEntity().getContent();
-                ContentType contentType = ContentType.getOrDefault(response.getEntity());
-                String mimeType = contentType.getMimeType();
-                String extension = "." + FORMAT_PNG;
-                if (StringUtils.contains(apiPath, "format=" + FORMAT_SVG)) {
-                    extension = "." + FORMAT_SVG;
-                }
-                Json fileJson = files().upload("qr-" + UUID.randomUUID() + extension, is, mimeType);
-
-                resp.set("status", "ok");
-                resp.set("file", fileJson);
-
+    @EndpointFunction(name = "_get")
+    public Json get(FunctionRequest request) {
+        try {
+            Json resp = defaultGetRequest(request);
+            if (!resp.string("status").equals("ok")) {
+                resp.set("status", "fail");
                 events().send("qrResponse", resp, request.getFunctionId());
-
-                IOUtils.closeQuietly(is);
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+            /*
+            InputStream is = response.getEntity().getContent();
+            ContentType contentType = ContentType.getOrDefault(response.getEntity());
+            String mimeType = contentType.getMimeType();
+            String extension = "." + FORMAT_PNG;
+            if (StringUtils.contains(apiPath, "format=" + FORMAT_SVG)) {
+                extension = "." + FORMAT_SVG;
+            }
+            Json fileJson = files().upload("qr-" + UUID.randomUUID() + extension, is, mimeType);
 
-        });
+            resp.set("status", "ok");
+            resp.set("file", fileJson);
 
+            events().send("qrResponse", resp, request.getFunctionId());
+
+            IOUtils.closeQuietly(is);
+            */
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return Json.map().set("status", "ok");
     }
 
+    private void setRequestHeaders(FunctionRequest request) {
+
+    }
 }
