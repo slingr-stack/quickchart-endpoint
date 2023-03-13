@@ -42,6 +42,7 @@ endpoint.qr.get = function(qrOptions, httpOptions) {
     }
 
     sys.logs.debug('[quickchart] GET from: ' + url);
+    if (httpOptions === undefined) httpOptions = {isDefaultCall : true};
     var options = checkHttpOptions(url, httpOptions);
     return endpoint._get(options);
 };

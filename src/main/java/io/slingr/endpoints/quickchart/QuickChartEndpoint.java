@@ -20,6 +20,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
@@ -49,13 +50,13 @@ public class QuickChartEndpoint extends HttpEndpoint {
     protected AppLogs appLogger;
 
     @Override
-    public void endpointStarted() { }
+    public void endpointStarted() {  }
 
     @Override
     public String getApiUri() { return API_URL; }
 
-    @EndpointFunction(name = "_chartByPost")
-    public Json chartByPost(FunctionRequest request) {
+    @EndpointFunction(name = "_post")
+    public Json post(FunctionRequest request) {
         Json resp = Json.map();
         Json params = request.getJsonParams();
         String path = params.string("path");
@@ -132,37 +133,26 @@ public class QuickChartEndpoint extends HttpEndpoint {
 
     @EndpointFunction(name = "_get")
     public Json get(FunctionRequest request) {
+        Json resp;
         try {
-            Json resp = defaultGetRequest(request);
-            if (!resp.string("status").equals("ok")) {
-                resp.set("status", "fail");
-                events().send("qrResponse", resp, request.getFunctionId());
-            }
-            /*
-            InputStream is = response.getEntity().getContent();
-            ContentType contentType = ContentType.getOrDefault(response.getEntity());
+            resp = defaultGetRequest(request);
+
+            InputStream is = new ByteArrayInputStream(resp.toString().getBytes());
+            ContentType contentType = ContentType.DEFAULT_TEXT;
             String mimeType = contentType.getMimeType();
             String extension = "." + FORMAT_PNG;
-            if (StringUtils.contains(apiPath, "format=" + FORMAT_SVG)) {
-                extension = "." + FORMAT_SVG;
-            }
             Json fileJson = files().upload("qr-" + UUID.randomUUID() + extension, is, mimeType);
 
             resp.set("status", "ok");
             resp.set("file", fileJson);
 
             events().send("qrResponse", resp, request.getFunctionId());
-
             IOUtils.closeQuietly(is);
-            */
-
         } catch (Exception e) {
             e.printStackTrace();
+            resp = Json.map();
+            resp.set("status", "fail");
         }
-        return Json.map().set("status", "ok");
-    }
-
-    private void setRequestHeaders(FunctionRequest request) {
-
+        return resp;
     }
 }
