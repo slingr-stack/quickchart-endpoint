@@ -1,0 +1,40 @@
+{
+  "label": "API call to quickchart",
+  "name": "apiCallQuickchart",
+  "category": "integrations",
+  "description": "This flow step will send generic request to quickchart",
+  "inputs": [
+    {
+      "label": "Url",
+      "name": "url",
+      "description": "The method and path to which this endpoint is to send requests in a generic way.",
+      "type": "urlParams",
+      "required": "true",
+      "options": {
+        "type": "dropDown",
+        "possibleValues": [
+            {
+              "label": "POST /chart"
+            },
+            {
+              "label": "GET /qr"
+            }
+        ]
+      }
+    },
+    {
+      "label": "Query Params",
+      "name": "params",
+      "description": "Parameters attached to the end of a url in a key value format. (e.g. key=ABC123)",
+      "type": "keyValue"
+    }
+  ],
+  "outputs": [
+    {
+      "label": "Response",
+      "name": "response",
+      "type": "object",
+      "description": "The response to external URL"
+    }
+  ]
+}

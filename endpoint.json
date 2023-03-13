@@ -32,6 +32,7 @@
         {
             "label": "POST",
             "name": "_post",
+            "description": "Sends a POST request",
             "callbacks": [
                 {
                     "name": "chartResponse",
@@ -43,6 +44,7 @@
         {
             "label": "GET",
             "name": "_get",
+            "description": "Sends a GET request",
             "callbacks": [
                 {
                     "name": "qrResponse",
@@ -54,6 +56,9 @@
     ],
     "scripts":[
         "functions.js"
+    ],
+    "flowSteps": [
+        "apiCallQuickchart"
     ],
     "configuration":[
         {

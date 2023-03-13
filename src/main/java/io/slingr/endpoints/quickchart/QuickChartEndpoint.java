@@ -60,19 +60,21 @@ public class QuickChartEndpoint extends HttpEndpoint {
         Json resp;
         Json params = request.getJsonParams();
         Json body = params.json("body");
-        if (!body.string("isDefaultCall").equals("true")) {
-            return defaultPostRequest(request);
-        }
 
         appLogger.info("Performing request of generation of chart");
 
         String fileName = "chart-" + UUID.randomUUID();
-        String extension = "." + FORMAT_PNG;
+        if (body.contains("format") && body.string("format").equals(FORMAT_PDF) ||
+                body.contains("f") && body.string("f").equals(FORMAT_PDF)) {
+            fileName += "." + FORMAT_PDF;
+        } else {
+            fileName += "." + FORMAT_PNG;
+        }
+
         if (body.contains("name")) {
             fileName = body.string("name");
             body.remove("name");
         }
-        fileName = fileName + extension;
 
         if (StringUtils.isNotBlank(key)) {
             body.set("key", key);
@@ -116,8 +118,16 @@ public class QuickChartEndpoint extends HttpEndpoint {
         Json resp = Json.map();
         Json params = request.getJsonParams();
         Json body = params.json("body");
-        if (!body.string("isDefaultCall").equals("true")) {
-            return defaultGetRequest(request);
+        String fileName = "qr-" + UUID.randomUUID();
+        if (body.contains("format") && body.string("format").equals(FORMAT_SVG) ||
+                body.contains("f") && body.string("f").equals(FORMAT_SVG)) {
+            fileName += "." + FORMAT_SVG;
+        } else {
+            fileName += "." + FORMAT_PNG;
+        }
+        if (body.contains("name")) {
+            fileName = body.string("name");
+            body.remove("name");
         }
 
         appLogger.info("Performing request of generation of qr");
@@ -128,8 +138,6 @@ public class QuickChartEndpoint extends HttpEndpoint {
             InputStream is = new ByteArrayInputStream(resp.toString().getBytes());
             ContentType contentType = ContentType.DEFAULT_TEXT;
             String mimeType = contentType.getMimeType();
-            String extension = "." + FORMAT_PNG;
-            String fileName = "qr-" + UUID.randomUUID() + extension;
             appLogger.info(String.format("Start to upload qr [%s]", fileName));
             Json fileJson = files().upload(fileName, is, mimeType);
             appLogger.info(String.format("Qr was upload successfully as [%s]", fileName));

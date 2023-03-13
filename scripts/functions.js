@@ -23,9 +23,7 @@ endpoint.chart.post = function(chartOptions, httpOptions) {
     var url = parse((endpoint._configuration && endpoint._configuration.key) ?
         concatQuery('/chart', "key",  endpoint._configuration.key) :
         '/chart');
-    if (httpOptions === undefined) httpOptions = {isDefaultCall : true};
     httpOptions = mergeJSON(httpOptions, chartOptions);
-
 
     sys.logs.debug('[quickchart] POST from: ' + url);
     var options = checkHttpOptions(url, httpOptions);
@@ -42,7 +40,6 @@ endpoint.qr.get = function(qrOptions, httpOptions) {
         }).join('&');
         url = url + ((!url || url.indexOf('?') < 0) ? '?' : '&') + tmp;
     }
-    if (httpOptions === undefined) httpOptions = {isDefaultCall : true};
 
     sys.logs.debug('[quickchart] GET from: ' + url);
     var options = checkHttpOptions(url, httpOptions);

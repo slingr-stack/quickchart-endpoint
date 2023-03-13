@@ -225,6 +225,7 @@ app.endpoints.quickchart.qr(qrOptions, callbackData, callbacks);
 Where:
 
 - `qrOptions`: a map with the following options:
+  - `name`: this is the image file name. If it is null the default is `qr-{uuid}`.
   - `text`: text to convert to QR code (required).
   - `margin`: specify the whitespace around QR image (optional). By default `4`.
   - `size`: in pixels of the square QR image (optional). By default `150`.
