@@ -30,8 +30,8 @@
     ],
     "functions": [
         {
-            "label": "Chart by POST",
-            "name": "_chartByPost",
+            "label": "POST",
+            "name": "_post",
             "callbacks": [
                 {
                     "name": "chartResponse",
