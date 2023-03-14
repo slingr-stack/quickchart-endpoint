@@ -5,14 +5,6 @@
   "description": "This flow step will a request to generate a QR with quickchart Endpoint.",
   "inputs": [
     {
-      "label": "File Name",
-      "name": "filename",
-      "type": "text",
-      "options": {
-        "allowContextSelector": "true"
-      }
-    },
-    {
       "label": "Text",
       "name": "text",
       "type": "text",

@@ -8,7 +8,6 @@ step.generateQRQuickchart = function (inputs) {
 	sys.logs.warn(JSON.stringify(inputs));
 	var inputsLogic = {
 		devicePixelRatio: inputs.devicePixelRatio || 2.0,
-		name: inputs.filename,
 		text: inputs.text || "QR Code",
 		margin: inputs.margin || 4,
 		size: inputs.size || 150,
