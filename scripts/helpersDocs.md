@@ -140,11 +140,211 @@ For more information about how shortcuts or flow steps works, and how they are g
 
 
 
-### Custom Flow Steps Name
+### Generate Chart
 
-Description of Custom Flow Steps
+Flow Step that provides us with the fields to create a Chart.
 
-*MANUALLY ADD THE DOCUMENTATION OF THESE FLOW STEPS HERE...*
+<h3>Inputs</h3>
+
+<table>
+    <thead>
+    <tr>
+        <th>Label</th>
+        <th>Type</th>
+        <th>Required</th>
+        <th>Default</th>
+        <th>Visibility</th>
+        <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>Background Color</td>
+        <td>text</td>
+        <td>no</td>
+        <td> "transparent" </td>
+        <td>Always</td>
+        <td>
+            Background of the chart canvas. Accept colors by name (red, blue, Default: transparent), and hex values (#ff00ff) without the "#".
+        </td>
+    </tr>
+    <tr>
+        <td>Width</td>
+        <td>number</td>
+        <td>no</td>
+        <td> 500 </td>
+        <td>Always</td>
+        <td>
+            Width of the image of chart in pixels.
+        </td>
+    </tr>
+    <tr>
+        <td>Heigth</td>
+        <td>number</td>
+        <td>no</td>
+        <td> 500 </td>
+        <td>Always</td>
+        <td>
+            Height of the image of chart in pixels.
+        </td>
+    </tr>
+    <tr>
+        <td>Device Pixel Ratio</td>
+        <td>number</td>
+        <td>no</td>
+        <td> 2.0 </td>
+        <td>Always</td>
+        <td>
+            Width and height are multiplied by this value.
+        </td>
+    </tr>
+    <tr>
+        <td>Output Format</td>
+        <td>choice</td>
+        <td>yes</td>
+        <td> PNG </td>
+        <td>Always</td>
+        <td>
+            File format of the image. Possible values are: <br> PNG <br> PDF
+        </td>
+    </tr>
+    <tr>
+        <td>Chart Data</td>
+        <td>json</td>
+        <td>yes</td>
+        <td> - </td>
+        <td>Always</td>
+        <td>
+            Json with the data to generate the chart.
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<h3>Outputs</h3>
+
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>response</td>
+        <td>object</td>
+        <td>
+            Object resulting from the response to the endpoint call.
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
+### Generate QR
+
+Flow Step that provides us with the fields to create a QR code.
+
+<h3>Inputs</h3>
+
+<table>
+    <thead>
+    <tr>
+        <th>Label</th>
+        <th>Type</th>
+        <th>Required</th>
+        <th>Default</th>
+        <th>Visibility</th>
+        <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>Text</td>
+        <td>text</td>
+        <td>no</td>
+        <td> - </td>
+        <td>Always</td>
+        <td>
+            Text to be encoded in the QR code.    
+        </td>
+    </tr>
+    <tr>
+        <td>Margin</td>
+        <td>number</td>
+        <td>no</td>
+        <td> 4 </td>
+        <td>Always</td>
+        <td>
+            Is the whitespace around QR image.
+        </td>
+    </tr>
+    <tr>
+        <td>Error Correction Level</td>
+        <td>choice</td>
+        <td>no</td>
+        <td> M </td>
+        <td>Always</td>
+        <td>
+            Error correction level Possible values are: <br> L <br> M <br> Q
+        </td>
+    </tr>
+    <tr>
+        <td>Output Format</td>
+        <td>choice</td>
+        <td>yes</td>
+        <td> PNG </td>
+        <td>Always</td>
+        <td>
+            File format of the image. Possible values are: <br> PNG <br> SVG
+        </td>
+    </tr>
+    <tr>
+        <td>Dark Color</td>
+        <td>text</td>
+        <td>no</td>
+        <td> 000000 </td>
+        <td>Always</td>
+        <td>
+            Color of the dark squares of QR code. Accept colors by hex values (#ff00ff) without the "#".
+        </td>
+    </tr>
+    <tr>
+        <td>Light Color (Background)</td>
+        <td>text</td>
+        <td>no</td>
+        <td> ffffff </td>
+        <td>Always</td>
+        <td>
+            Color of the whites spaces of QR code. Accept colors by hex values (#ff00ff) without the "#".
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<h3>Outputs</h3>
+
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>response</td>
+        <td>object</td>
+        <td>
+            Object resulting from the response to the endpoint call.
+        </td>
+    </tr>
+    </tbody>
+</table>
+
 
 
 </details>

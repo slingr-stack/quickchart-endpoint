@@ -51,10 +51,6 @@
           {
             "label": "Q",
             "name": "Q"
-          },
-          {
-            "label": "H",
-            "name": "H"
           }
         ],
         "allowContextSelector": "false"
