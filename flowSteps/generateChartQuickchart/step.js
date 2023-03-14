@@ -1,16 +1,15 @@
 /**
- * This flow step will send generic request.
+ * This flow step will send a generic request to generate a Chart.
  *
  * @param {object} inputs
- * {text} method, This is used to config method.
- * {text} url, This is used to config external URL.
- * {Array[string]} pathVariables, This is used to config path variables.
  */
 step.generateChartQuickchart = function (inputs) {
 
 	sys.logs.warn(JSON.stringify(inputs));
 	var inputsLogic = {
-		backgroundColor: inputs.backgroundColor || "white",
+		devicePixelRatio: inputs.devicePixelRatio || 2.0,
+		name: inputs.filename,
+		backgroundColor: inputs.backgroundColor || "transparent",
 		width: inputs.width || 500,
 		height: inputs.height || 500,
 		format: inputs.formatoutput || "png",

@@ -230,7 +230,6 @@ Where:
   - `margin`: specify the whitespace around QR image (optional). By default `4`.
   - `size`: in pixels of the square QR image (optional). By default `150`.
   - `ecLevel`: error correction level (valid values: L, M, Q, H) (optional). By default `M`.
-  - `format`: format of your output. Currently the two supported output formats are PNG and PDF (optional). By default `png`.
   - `dark`: QR color (optional). By default `000`.
   - `light`: background color (optional). By default `fff`.
   - `format`: format of your output. Currently the two supported output formats are PNG and SVG (optional). By default `png`.

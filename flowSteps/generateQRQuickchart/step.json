@@ -1,8 +1,8 @@
 {
   "label": "Generate Chart with quickchart",
-  "name": "generateChartQuickchart",
+  "name": "generateQRQuickchart",
   "category": "integrations",
-  "description": "This flow step will a request to generate a chart with quickchart Endpoint.",
+  "description": "This flow step will a request to generate a QR with quickchart Endpoint.",
   "inputs": [
     {
       "label": "File Name",
@@ -13,18 +13,18 @@
       }
     },
     {
-      "label": "Background Color",
-      "name": "backgroundColor",
-      "description": "Background of the chart canvas. Accepts colors (red, blue, Default: transparent), and hex values (#ff00ff).",
+      "label": "Text",
+      "name": "text",
       "type": "text",
+      "required": "true",
       "options": {
         "allowContextSelector": "true"
       }
     },
     {
-      "label": "Width",
-      "name": "width",
-      "description": "Width of the image in pixels. (Default: 500px)",
+      "label": "Margin",
+      "name": "margin",
+      "description": "Specify the whitespace around QR image in pixels. (Default: 4px)",
       "type": "text",
       "options": {
         "validation": "number",
@@ -32,9 +32,9 @@
       }
     },
     {
-      "label": "Height",
-      "name": "height",
-      "description": "Height of the image in pixels. (Default: 500px)",
+      "label": "Size",
+      "name": "size",
+      "description": "Size of the image in pixels. (Default: 150px)",
       "type": "text",
       "options": {
         "validation": "number",
@@ -42,12 +42,29 @@
       }
     },
     {
-      "label": "Device Pixel Ratio",
-      "name": "devicePixelRatio",
-      "description": "Note that width and height are multiplied by this value. (Defaults to retina=2.0).",
-      "type": "text",
+      "label": "Error Correction Level",
+      "name": "ecLevel",
+      "type": "choice",
+      "defaultValue": "M",
       "options": {
-        "validation": "number",
+        "possibleValues": [
+          {
+            "label": "L",
+            "name": "L"
+          },
+          {
+            "label": "M",
+            "name": "M"
+          },
+          {
+            "label": "Q",
+            "name": "Q"
+          },
+          {
+            "label": "H",
+            "name": "H"
+          }
+        ],
         "allowContextSelector": "false"
       }
     },
@@ -72,9 +89,17 @@
       }
     },
     {
-      "label": "Chart",
-      "name": "chart",
-      "type": "json",
+      "label": "Dark Color",
+      "name": "dark",
+      "type": "text",
+      "options": {
+        "allowContextSelector": "true"
+      }
+    },
+    {
+      "label": "Background Color",
+      "name": "light",
+      "type": "text",
       "options": {
         "allowContextSelector": "true"
       }

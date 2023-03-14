@@ -59,7 +59,8 @@
     ],
     "flowSteps": [
         "apiCallQuickchart",
-        "generateChartQuickchart"
+        "generateChartQuickchart",
+        "generateQRQuickchart"
     ],
     "configuration":[
         {
