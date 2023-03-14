@@ -1,5 +1,5 @@
 {
-  "label": "Generate Chart with quickchart",
+  "label": "Generate QR with quickchart",
   "name": "generateQRQuickchart",
   "category": "integrations",
   "description": "This flow step will a request to generate a QR with quickchart Endpoint.",
