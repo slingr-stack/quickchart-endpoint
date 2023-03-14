@@ -58,7 +58,8 @@
         "functions.js"
     ],
     "flowSteps": [
-        "apiCallQuickchart"
+        "apiCallQuickchart",
+        "generateChartQuickchart"
     ],
     "configuration":[
         {
