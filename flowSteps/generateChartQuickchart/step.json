@@ -75,6 +75,7 @@
       "label": "Chart",
       "name": "chart",
       "type": "json",
+      "required": "true",
       "options": {
         "allowContextSelector": "true"
       }
