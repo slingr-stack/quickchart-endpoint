@@ -8,7 +8,7 @@
  */
 step.generateChartQuickchart = function (inputs) {
 
-	sys.logs.warn(inputs);
+	sys.logs.warn(JSON.stringify(inputs));
 	var inputsLogic = {
 		backgroundColor: inputs.backgroundColor || "white",
 		width: inputs.width || 500,
