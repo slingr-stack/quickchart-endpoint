@@ -121,8 +121,15 @@ endpoint.utils.formatTimestamp = function(date) {
 ///////////////////////
 
 var mergeJSON = function (json1, json2) {
-    for (var attrname in json2) { json1[attrname] = json2[attrname]; }
-    return json1;
+    const result = {};
+    var key;
+    for (key in json1) {
+        if(json1.hasOwnProperty(key)) result[key] = json1[key];
+    }
+    for (key in json2) {
+        if(json2.hasOwnProperty(key)) result[key] = json2[key];
+    }
+    return result;
 }
 
 var concatQuery = function (url, key, value) {
