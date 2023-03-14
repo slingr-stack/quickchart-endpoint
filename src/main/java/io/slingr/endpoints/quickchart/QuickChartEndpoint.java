@@ -1,35 +1,24 @@
 package io.slingr.endpoints.quickchart;
 
-import io.slingr.endpoints.Endpoint;
 import io.slingr.endpoints.HttpEndpoint;
-import io.slingr.endpoints.HttpPerUserEndpoint;
-import io.slingr.endpoints.exceptions.EndpointException;
 import io.slingr.endpoints.framework.annotations.*;
 import io.slingr.endpoints.services.AppLogs;
 import io.slingr.endpoints.utils.Json;
 import io.slingr.endpoints.ws.exchange.FunctionRequest;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
-import java.util.concurrent.Executors;
 
 /**
  * <p>QuickChart endpoint
  * <p>
- * API Reference: https://quickchart.io/
+ * API Reference: <a href="https://quickchart.io/">Quickchart</a>
  *
  * <p>Created by hpacini on 11/22/19.
  */
@@ -59,23 +48,13 @@ public class QuickChartEndpoint extends HttpEndpoint {
     public Json post(FunctionRequest request) {
         Json resp;
         Json params = request.getJsonParams();
+        String path = params.string("path");
         Json body = params.json("body");
 
         appLogger.info("Performing request of generation of chart");
 
         String fileName = "chart-" + UUID.randomUUID();
-        if (body.contains("format") && body.string("format").equals(FORMAT_PDF) ||
-                body.contains("f") && body.string("f").equals(FORMAT_PDF)) {
-            fileName += "." + FORMAT_PDF;
-        } else {
-            fileName += "." + FORMAT_PNG;
-        }
-
-        if (body.contains("name")) {
-            fileName = body.string("name");
-            body.remove("name");
-        }
-
+        fileName = getFormat(body, fileName, FORMAT_PDF);
         if (StringUtils.isNotBlank(key)) {
             body.set("key", key);
         }
@@ -86,20 +65,21 @@ public class QuickChartEndpoint extends HttpEndpoint {
 
         InputStream is = null;
         try {
+            if (path.contains("/chart")) {
+                is = new ByteArrayInputStream(resp.toString().getBytes());
+                ContentType contentType = ContentType.DEFAULT_TEXT;
+                String mimeType = contentType.getMimeType();
+                appLogger.info(String.format("Start to upload chart [%s]", fileName));
+                Json fileJson = files().upload(fileName, is, mimeType);
+                appLogger.info(String.format("Chart was upload successfully as [%s]", fileName));
+                resp.set("file", fileJson);
 
-            is = new ByteArrayInputStream(resp.toString().getBytes());
-            ContentType contentType = ContentType.DEFAULT_TEXT;
-            String mimeType = contentType.getMimeType();
-            appLogger.info(String.format("Start to upload chart [%s]", fileName));
-            Json fileJson = files().upload(fileName, is, mimeType);
-            appLogger.info(String.format("Chart was upload successfully as [%s]", fileName));
-            resp.set("file", fileJson);
+                resp.set("status", "ok");
+                resp.set("file", fileJson);
 
-            resp.set("status", "ok");
-            resp.set("file", fileJson);
-
-            events().send("chartResponse", resp, request.getFunctionId());
-            appLogger.info("Chart created successfully");
+                events().send("chartResponse", resp, request.getFunctionId());
+                appLogger.info("Chart created successfully");
+            }
         }
         catch (Exception e) {
             String ERROR_MESSAGE = "Error to generate chart file";
@@ -113,15 +93,10 @@ public class QuickChartEndpoint extends HttpEndpoint {
         return resp;
     }
 
-    @EndpointFunction(name = "_get")
-    public Json get(FunctionRequest request) {
-        Json resp = Json.map();
-        Json params = request.getJsonParams();
-        Json body = params.json("body");
-        String fileName = "qr-" + UUID.randomUUID();
-        if (body.contains("format") && body.string("format").equals(FORMAT_SVG) ||
-                body.contains("f") && body.string("f").equals(FORMAT_SVG)) {
-            fileName += "." + FORMAT_SVG;
+    private String getFormat(Json body, String fileName, String anotherFormat) {
+        if (body.contains("format") && body.string("format").equals(anotherFormat) ||
+                body.contains("f") && body.string("f").equals(anotherFormat)) {
+            fileName += "." + anotherFormat;
         } else {
             fileName += "." + FORMAT_PNG;
         }
@@ -129,25 +104,38 @@ public class QuickChartEndpoint extends HttpEndpoint {
             fileName = body.string("name");
             body.remove("name");
         }
+        return fileName;
+    }
+
+    @EndpointFunction(name = "_get")
+    public Json get(FunctionRequest request) {
+        Json resp = Json.map();
+        Json params = request.getJsonParams();
+        String path = params.string("path");
+        Json body = params.json("body");
+        String fileName = "qr-" + UUID.randomUUID();
+        fileName = getFormat(body, fileName, FORMAT_SVG);
 
         appLogger.info("Performing request of generation of qr");
 
         try {
             resp = defaultGetRequest(request);
 
-            InputStream is = new ByteArrayInputStream(resp.toString().getBytes());
-            ContentType contentType = ContentType.DEFAULT_TEXT;
-            String mimeType = contentType.getMimeType();
-            appLogger.info(String.format("Start to upload qr [%s]", fileName));
-            Json fileJson = files().upload(fileName, is, mimeType);
-            appLogger.info(String.format("Qr was upload successfully as [%s]", fileName));
+            if (path.contains("/qr")) {
+                InputStream is = new ByteArrayInputStream(resp.toString().getBytes());
+                ContentType contentType = ContentType.DEFAULT_TEXT;
+                String mimeType = contentType.getMimeType();
+                appLogger.info(String.format("Start to upload qr [%s]", fileName));
+                Json fileJson = files().upload(fileName, is, mimeType);
+                appLogger.info(String.format("Qr was upload successfully as [%s]", fileName));
 
-            resp.set("status", "ok");
-            resp.set("file", fileJson);
+                resp.set("status", "ok");
+                resp.set("file", fileJson);
 
-            events().send("qrResponse", resp, request.getFunctionId());
-            IOUtils.closeQuietly(is);
-            appLogger.info("Qr created successfully");
+                events().send("qrResponse", resp, request.getFunctionId());
+                IOUtils.closeQuietly(is);
+                appLogger.info("Qr created successfully");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             resp.set("status", "fail");

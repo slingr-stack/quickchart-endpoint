@@ -1,7 +1,7 @@
 ---
 title: QuickChart
 keywords: 
-last_updated: November 25, 2019
+last_updated: March 14, 2023
 tags: []
 summary: "Detailed description of QuickChart endpoint."
 ---
@@ -276,5 +276,3 @@ SLINGR is a low-code rapid application development platform that accelerates dev
 ## License
 
 This endpoint is licensed under the Apache License 2.0. See the `LICENSE` file for more details.
-
-

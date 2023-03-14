@@ -1,0 +1,72 @@
+{
+  "label": "Generate Chart with quickchart",
+  "name": "generateChartQuickchart",
+  "category": "integrations",
+  "description": "This flow step will a request to generate a chart with quickchart Endpoint.",
+  "inputs": [
+    {
+      "label": "Background Color",
+      "name": "backgroundColor",
+      "description": "Background of the chart canvas. Accepts colors (red, blue, Default: white), and hex values (#ff00ff).",
+      "type": "text",
+      "options": {
+        "allowContextSelector": "false"
+      }
+    },
+    {
+      "label": "Width",
+      "name": "width",
+      "description": "Width of the image in pixels. (Default: 500px)",
+      "type": "text",
+      "options": {
+        "validation": "number",
+        "allowContextSelector": "false"
+      }
+    },
+    {
+      "label": "Height",
+      "name": "height",
+      "description": "Height of the image in pixels. (Default: 500px)",
+      "type": "text",
+      "options": {
+        "validation": "number",
+        "allowContextSelector": "false"
+      }
+    },
+    {
+      "label": "Output Format",
+      "name": "formatoutput",
+      "description": "Extension of the image to return. (Default: png)",
+      "type": "choice",
+      "options": {
+        "possibleValues": [
+          {
+            "label": "PNG",
+            "name": "png"
+          },
+          {
+            "label": "PDF",
+            "name": "pdf"
+          }
+        ],
+        "allowContextSelector": "false"
+      }
+    },
+    {
+      "label": "Chart",
+      "name": "chart",
+      "type": "json",
+      "options": {
+        "allowContextSelector": "true"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "label": "Response",
+      "name": "response",
+      "type": "object",
+      "description": "The response to external URL"
+    }
+  ]
+}

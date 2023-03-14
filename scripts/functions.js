@@ -12,7 +12,7 @@ endpoint.chart = {};
 
 endpoint.qr = {};
 
-endpoint.chart.post = function(chartOptions, httpOptions) {
+endpoint.chart.post = function(chartOptions, httpOptions, callbackData, callbacks) {
     if (!chartOptions) {
         sys.logs.error('Invalid argument received. This helper should receive the following parameters as non-empty strings: [chartOptions].');
         throw 'Invalid chart options';
@@ -27,10 +27,10 @@ endpoint.chart.post = function(chartOptions, httpOptions) {
 
     sys.logs.debug('[quickchart] POST from: ' + url);
     var options = checkHttpOptions(url, httpOptions);
-    return endpoint._post(options);
+    return endpoint._post(options, callbackData, callbacks);
 };
 
-endpoint.qr.get = function(qrOptions, httpOptions) {
+endpoint.qr.get = function(qrOptions, httpOptions, callbackData, callbacks) {
     var url = parse((endpoint._configuration && endpoint._configuration.key) ?
         concatQuery('/qr', "key",  endpoint._configuration.key) :
         '/qr');
@@ -43,7 +43,7 @@ endpoint.qr.get = function(qrOptions, httpOptions) {
 
     sys.logs.debug('[quickchart] GET from: ' + url);
     var options = checkHttpOptions(url, httpOptions);
-    return endpoint._get(options);
+    return endpoint._get(options, callbackData, callbacks);
 };
 
 ////////////////////////////////////
