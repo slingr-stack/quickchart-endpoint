@@ -5,7 +5,7 @@
     "internal": false,
     "configurationType": "GLOBAL",
     "deployment": {
-        "profiles":[
+        "profiles" :[
             {
                 "name": "default",
                 "label": "Default",

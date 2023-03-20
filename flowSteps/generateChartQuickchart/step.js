@@ -5,7 +5,6 @@
  */
 step.generateChartQuickchart = function (inputs) {
 
-	sys.logs.warn(JSON.stringify(inputs));
 	var inputsLogic = {
 		devicePixelRatio: inputs.devicePixelRatio || 2.0,
 		backgroundColor: inputs.backgroundColor || "transparent",
