@@ -1,0 +1,104 @@
+{
+  "label": "Generate QR with quickchart",
+  "name": "generateQRQuickchart",
+  "category": "integrations",
+  "description": "This flow step will a request to generate a QR with quickchart Endpoint.",
+  "inputs": [
+    {
+      "label": "Text",
+      "name": "text",
+      "type": "text",
+      "required": "true",
+      "options": {
+        "allowContextSelector": "true"
+      }
+    },
+    {
+      "label": "Margin",
+      "name": "margin",
+      "description": "Specify the whitespace around QR image in pixels. (Default: 4px)",
+      "type": "text",
+      "options": {
+        "validation": "number",
+        "allowContextSelector": "false"
+      }
+    },
+    {
+      "label": "Size",
+      "name": "size",
+      "description": "Size of the image in pixels. (Default: 150px)",
+      "type": "text",
+      "options": {
+        "validation": "number",
+        "allowContextSelector": "false"
+      }
+    },
+    {
+      "label": "Error Correction Level",
+      "name": "ecLevel",
+      "type": "choice",
+      "defaultValue": "M",
+      "options": {
+        "possibleValues": [
+          {
+            "label": "L",
+            "name": "L"
+          },
+          {
+            "label": "M",
+            "name": "M"
+          },
+          {
+            "label": "Q",
+            "name": "Q"
+          }
+        ],
+        "allowContextSelector": "false"
+      }
+    },
+    {
+      "label": "Output Format",
+      "name": "formatoutput",
+      "description": "Extension of the image to return.",
+      "defaultValue": "png",
+      "type": "choice",
+      "options": {
+        "possibleValues": [
+          {
+            "label": "PNG",
+            "name": "png"
+          },
+          {
+            "label": "PDF",
+            "name": "pdf"
+          }
+        ],
+        "allowContextSelector": "false"
+      }
+    },
+    {
+      "label": "Dark Color",
+      "name": "dark",
+      "type": "text",
+      "options": {
+        "allowContextSelector": "true"
+      }
+    },
+    {
+      "label": "Background Color",
+      "name": "light",
+      "type": "text",
+      "options": {
+        "allowContextSelector": "true"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "label": "Response",
+      "name": "response",
+      "type": "object",
+      "description": "The response to external URL"
+    }
+  ]
+}

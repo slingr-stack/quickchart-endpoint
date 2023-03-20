@@ -1,0 +1,20 @@
+{
+  "fileName": "functions",
+  "endpointName": "quickchart",
+  "apiDescriptors": [
+    {
+      "prefix": "",
+      "suffix": "",
+      "method": "POST",
+      "url": "/chart/:chartOptions",
+      "acceptsCallbacks": true
+    },
+    {
+      "prefix": "",
+      "suffix": "",
+      "method": "GET",
+      "url": "/qr/:qrOptions",
+      "acceptsCallbacks": true
+    }
+  ]
+}

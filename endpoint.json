@@ -5,7 +5,7 @@
     "internal": false,
     "configurationType": "GLOBAL",
     "deployment": {
-        "profiles":[
+        "profiles" :[
             {
                 "name": "default",
                 "label": "Default",
@@ -30,8 +30,9 @@
     ],
     "functions": [
         {
-            "label": "Chart by POST",
-            "name": "_chartByPost",
+            "label": "POST",
+            "name": "_post",
+            "description": "Sends a POST request",
             "callbacks": [
                 {
                     "name": "chartResponse",
@@ -41,8 +42,9 @@
             ]
         },
         {
-            "label": "QR by GET",
-            "name": "_qrByGet",
+            "label": "GET",
+            "name": "_get",
+            "description": "Sends a GET request",
             "callbacks": [
                 {
                     "name": "qrResponse",
@@ -54,6 +56,11 @@
     ],
     "scripts":[
         "functions.js"
+    ],
+    "flowSteps": [
+        "apiCallQuickchart",
+        "generateChartQuickchart",
+        "generateQRQuickchart"
     ],
     "configuration":[
         {
